@@ -6,6 +6,8 @@
 #include <memory>
 #include <stdexcept>
 #include <xfunctional>
+#include <iostream>
+#include "myCollection.h"
 
  #pragma pack(push,_CRT_PACKING)
  #pragma warning(push,3)
@@ -2656,26 +2658,89 @@ public:
 	//EECS 395 project code!!!
 
 	//NEW CODE BEGIN - this is what will be different from the STL code.
-	template <class T, class Alloc = allocator<T>> class MyVector : public vector<T,Alloc>
+	template <class T, class Alloc = allocator<T>> class MyVector : public vector<T,Alloc>, public MyCollection<T>
 	{
 	public:
-		//member types
+		/*
+		 * Member types
+		 */
 		typedef typename vector::allocator_type allocator_type;
 		typedef typename vector::reference reference;
 		typedef typename vector::const_reference const_reference;
 		typedef typename vector::pointer pointer;
 		typedef typename vector::const_pointer const_pointer;
 		typedef typename vector::size_type size_type;
-		//TODO: iterator types
+		typedef typename vector::iterator iterator;
+		typedef typename vector::const_iterator const_iterator;
+		typedef typename vector::reverse_iterator reverse_iterator;
+		typedef typename vector::const_reverse_iterator const_reverse_iterator;
 
+		/*
+		 * CONSTRUCTORS
+		 */
 		//default constructor
-		explicit MyVector (const allocator_type& alloc = allocator_type()) : vector(alloc){		}
+		explicit MyVector (const allocator_type& alloc = allocator_type()) : vector(alloc)
+		{		
+			
+		}
 		//fill constructor
 		explicit MyVector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) :
-		vector (n, val, alloc) {		}
-		//TODO: range constructor (depends on iterator implementation)
+		vector (n, val, alloc) 
+		{		
+			
+		}
+		//range constructor
+		template<class Iterator> MyVector(Iterator start, Iterator end) : vector(start,end)
+		{
+			
+		}
 		//copy constructor
-		explicit MyVector(const MyVector &v) : vector(v) { }
+		explicit MyVector(const MyVector &v) : vector(v) 
+		{ 
+			
+		}
+
+
+		/*
+		 * Member functions
+		 */
+		reference operator[] (size_type n)
+		{
+			return vector::operator[](n);
+		}
+		T starting_element()
+		{
+			const_iterator b = this->cbegin();
+			return *b;
+		}
+		T last_element()
+		{
+			const_iterator e = (this->cend() - 1);
+			return *e;
+		}
+
+		T value_at_position(int i)
+		{
+			const_iterator b = this->cbegin();
+			if(i < this->size())
+			{
+				return *(b + i);
+			}
+		}
+		void show_all()
+		{
+			iterator b = this->begin();
+			cout << "vector elts: ";
+			for(iterator ii = b; ii < this->end(); ii++) cout << *ii << ",";
+			cout << endl;
+		}
+
+		void resize(size_type newsize)
+		{
+			vector::resize(newsize);
+			p_first = _Myfirst;
+			p_last = _Mylast;
+		}
 
 	};
 
